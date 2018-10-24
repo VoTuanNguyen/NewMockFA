@@ -1,14 +1,15 @@
 package com.fpt.controller;
 
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/login")
 public class LoginController {
 	
-	@RequestMapping("/")
+	@PostMapping("/")
 	public String demo() {
-		return "OK";
+		return "";
 	}
 }
