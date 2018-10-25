@@ -18,7 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import com.fpt.model.LoginModel;
-import com.fpt.service.LoginService;
+import com.fpt.service.AccountService;
+import com.fpt.service.JwtService;
 
 public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -28,7 +29,7 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 	private JwtService jwtService;
 
 	@Autowired
-	private LoginService loginService;
+	private AccountService accountService;
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -40,7 +41,7 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 		if (jwtService.validateTokenLogin(authToken)) {
 			String username = jwtService.getUsernameFromToken(authToken);
 
-			LoginModel user = loginService.findUserByUserName(username);
+			LoginModel user = accountService.findUserByUserName(username);
 			if (user != null) {
 				boolean enabled = true;
 				boolean accountNonExpired = true;

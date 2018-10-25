@@ -16,7 +16,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 			throws IOException, ServletException {
 //		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		response.getWriter().write("Access Denied!");
+		response.getWriter().write("Denied");
 
 	}
 }

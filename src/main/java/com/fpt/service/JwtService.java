@@ -1,4 +1,4 @@
-package com.fpt.security;
+package com.fpt.service;
 
 import java.util.Date;
 
@@ -17,7 +17,7 @@ import com.nimbusds.jwt.SignedJWT;
 public class JwtService {
 
 	public static final String USERNAME = "username";
-	public static final String SECRET_KEY = "SECRET_KEY";
+	public static final String SECRET_KEY = "NGUYENVT2_MY_SECRET_KEY_FRESHER_ACADAMY_HCM_JAVA";
 	public static final int EXPIRE_TIME = 86400000;
 
 	public String generateTokenLogin(String username) {

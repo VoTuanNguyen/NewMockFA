@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.fpt.entity.User;
 
-public interface LoginRepository extends JpaRepository<User, Integer>{
-	@Query("SELECT u FROM User u WHERE u.userName = :userName")
-	User findUserByUserName(@Param("userName") String userName);
+public interface AccountRepository extends JpaRepository<User, Integer>{
+	@Query("SELECT u FROM User u WHERE u.username = :username")
+	User findUserByUserName(@Param("username") String username);
 }
