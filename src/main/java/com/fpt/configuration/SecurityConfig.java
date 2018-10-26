@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fpt.security.CustomAccessDeniedHandler;
@@ -40,10 +41,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
-
+	
+	@Bean
+    public BCryptPasswordEncoder encoder(){
+        return new BCryptPasswordEncoder();
+    }
+	
 	protected void configure(HttpSecurity http) throws Exception {
 		// Disable crsf cho đường dẫn /admin/**
-		http.csrf().ignoringAntMatchers("/admin/**");
+		http.csrf().ignoringAntMatchers("/admin/**").disable();
 
 		http.authorizeRequests().antMatchers("/trip/**").permitAll();
 		http.authorizeRequests().antMatchers("/route/**").permitAll();
@@ -51,12 +57,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/seat/**").permitAll();
 		http.authorizeRequests().antMatchers("/account/**").permitAll();
 
-		http.antMatcher("/admin/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()
+		http.antMatcher("/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-//				.antMatchers(HttpMethod.GET, "/rest/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-//				.antMatchers(HttpMethod.POST, "/rest/**").access("hasRole('ROLE_ADMIN')")
-//				.antMatchers(HttpMethod.DELETE, "/rest/**").access("hasRole('ROLE_ADMIN')").and()
-				.antMatchers(HttpMethod.GET, "/admin/**").access("hasRole('ROLE_ADMIN')").and()
+//				.antMatchers(HttpMethod.GET, "/rest/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')").and()
+				.antMatchers(HttpMethod.GET,"/admin/**").access("hasRole('ROLE_ADMIN')")
+				.and()
 				.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
 	}

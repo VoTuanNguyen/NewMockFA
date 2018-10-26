@@ -39,4 +39,18 @@ public class AccountServiceImp implements AccountService {
 		return accountRepository.saveAndFlush(user);
 	}
 
+	@Override
+	public boolean checkEmail(String email) {
+		User u = null;
+		u = accountRepository.findUserByEmail(email);
+		return u != null;
+	}
+
+	@Override
+	public boolean checkUsername(String username) {
+		User u = null;
+		u = accountRepository.findUserByUserName(username);
+		return u != null;
+	}
+
 }
