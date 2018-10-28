@@ -5,30 +5,25 @@ import org.springframework.stereotype.Service;
 
 import com.fpt.entity.User;
 import com.fpt.model.LoginModel;
-import com.fpt.repository.AccountRepository;
+import com.fpt.repository.UserRepository;
 import com.fpt.service.AccountService;
 
 @Service
 public class AccountServiceImp implements AccountService {
 
 	@Autowired
-	private AccountRepository accountRepository;
+	private UserRepository userRepository;
 
 	@Override
-	public LoginModel login(String username) {
+	public User login(String username) {
 		User u = null;
-		u = accountRepository.findUserByUserName(username);
-		LoginModel loginModel = null;
-		if (u != null) {
-			loginModel = new LoginModel(u.getUsername(), u.getPassword());
-			loginModel.setRoles(new String[] { u.getRole().getName() });
-		}
-		return loginModel;
+		u = userRepository.findUserByUserName(username);
+		return u != null ? u : null;
 	}
 
 	@Override
 	public LoginModel findUserByUserName(String username) {
-		User u = accountRepository.findUserByUserName(username);
+		User u = userRepository.findUserByUserName(username);
 		LoginModel loginModel = new LoginModel(u.getUsername(), u.getPassword());
 		loginModel.setRoles(new String[] { u.getRole().getName() });
 		return loginModel;
@@ -36,21 +31,30 @@ public class AccountServiceImp implements AccountService {
 
 	@Override
 	public User register(User user) {
-		return accountRepository.saveAndFlush(user);
+		return userRepository.saveAndFlush(user);
 	}
 
 	@Override
 	public boolean checkEmail(String email) {
 		User u = null;
-		u = accountRepository.findUserByEmail(email);
+		u = userRepository.findUserByEmail(email);
 		return u != null;
 	}
 
 	@Override
 	public boolean checkUsername(String username) {
 		User u = null;
-		u = accountRepository.findUserByUserName(username);
+		u = userRepository.findUserByUserName(username);
 		return u != null;
+	}
+
+	@Override
+	public String getName(String username) {
+		User u = userRepository.findUserByUserName(username);
+		if(u != null) {
+			return u.getName();
+		}
+		return "NULL";
 	}
 
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fpt.entity.User;
 import com.fpt.model.LoginModel;
 import com.fpt.model.Message;
+import com.fpt.model.MessageLogin;
 import com.fpt.service.AccountService;
 import com.fpt.service.JwtService;
 
@@ -29,7 +30,8 @@ public class AccountController {
 
 	@Autowired
 	private BCryptPasswordEncoder encrypt;
-
+	
+	//register account by user
 	@PostMapping("/register")
 	public Message register(@RequestBody User user) {
 		String passwordEncrypt = encrypt.encode(user.getPassword());
@@ -43,35 +45,87 @@ public class AccountController {
 		}
 		return new Message("KO");
 	}
-
+	
+	//login
 	@PostMapping("/login")
-	public Message login(@RequestBody LoginModel login) {
-		LoginModel loginModel = accountService.login(login.getUsername());
-		if (loginModel != null) {
-			if (encrypt.matches(login.getPassword(), loginModel.getPassword())) {
-				return new Message(jwtService.generateTokenLogin(login.getUsername()));
+	public MessageLogin login(@RequestBody LoginModel login) {
+		User u = accountService.login(login.getUsername());
+		if (u != null) {
+			if (encrypt.matches(login.getPassword(), u.getPassword())) {
+				String token = jwtService.generateTokenLogin(login.getUsername());
+				String url = "/home";
+				switch (u.getRole().getId()) {
+				case 1:
+					url = "/home";
+					break;
+				case 2:
+					url = "/staff";
+					break;
+				case 3:
+					url = "/admin";
+					break;
+				default:
+					url = "/home";
+				}
+				return new MessageLogin(token, url);
 			}
 		}
-		return new Message("KO");
+		return new MessageLogin("KO", "/home");
 	}
-
+	
+	//check email exist
 	@GetMapping("/checkemail/{email}")
 	public Message checkEmail(@PathVariable String email) {
 		return new Message(accountService.checkEmail(email) ? "KO" : "OK");
 	}
-
+	
+	//check user name exist
 	@GetMapping("/checkusername/{username}")
 	public Message checkUsername(@PathVariable String username) {
 		return new Message(accountService.checkUsername(username) ? "KO" : "OK");
 	}
-	
+
+	// refresh token to keep login
 	@GetMapping("/refreshtoken/{token}")
 	public Message refreshToken(@PathVariable String token) {
 		return new Message(jwtService.refreshToken(token));
 	}
-	
-	@RequestMapping("")
-	public Message aa() {
-		return new Message("OKOK");
+
+	//get name user from token
+	@GetMapping("/getname/{token}")
+	public Message getName(@PathVariable String token) {
+		if (jwtService.validateTokenLogin(token)) {
+			String username = jwtService.getUsernameFromToken(token);
+			String name = accountService.getName(username);
+			return new Message(name.equals("NULL") ? "KO" : name);
+		}
+		return new Message("KO");
+	}
+
+	//get redirect url when user has logged and try access to login
+	@GetMapping("/redirect/{token}")
+	public Message redirect(@PathVariable String token) {
+		if (jwtService.validateTokenLogin(token)) {
+			String username = jwtService.getUsernameFromToken(token);
+			User u = accountService.login(username);
+			if(u != null) {
+				String url = "/home";
+				switch (u.getRole().getId()) {
+				case 1:
+					url = "/home";
+					break;
+				case 2:
+					url = "/staff";
+					break;
+				case 3:
+					url = "/admin";
+					break;
+				default:
+					url = "/home";
+				}
+				return new Message(url);
+			}
+		}
+		return new Message("KO");
 	}
 }

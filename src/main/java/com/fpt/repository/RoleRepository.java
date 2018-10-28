@@ -3,9 +3,8 @@ package com.fpt.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.fpt.entity.User;
-
+import com.fpt.entity.Role;
 @Repository
-public interface AdminRepository extends JpaRepository<User, Integer>{
-
+public interface RoleRepository extends JpaRepository<Role, Integer>{
+	
 }

@@ -37,25 +37,28 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String authToken = httpRequest.getHeader(TOKEN_HEADER);
-		System.out.println(authToken);
+//		System.out.println(authToken);
+		try {
+			if (jwtService.validateTokenLogin(authToken)) {
+				String username = jwtService.getUsernameFromToken(authToken);
 
-		if (jwtService.validateTokenLogin(authToken)) {
-			String username = jwtService.getUsernameFromToken(authToken);
+				LoginModel user = accountService.findUserByUserName(username);
+				if (user != null) {
+					boolean enabled = true;
+					boolean accountNonExpired = true;
+					boolean credentialsNonExpired = true;
+					boolean accountNonLocked = true;
+					UserDetails userDetail = new User(username, user.getPassword(), enabled, accountNonExpired,
+							credentialsNonExpired, accountNonLocked, user.getAuthorities());
 
-			LoginModel user = accountService.findUserByUserName(username);
-			if (user != null) {
-				boolean enabled = true;
-				boolean accountNonExpired = true;
-				boolean credentialsNonExpired = true;
-				boolean accountNonLocked = true;
-				UserDetails userDetail = new User(username, user.getPassword(), enabled, accountNonExpired,
-						credentialsNonExpired, accountNonLocked, user.getAuthorities());
-
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetail,
-						null, userDetail.getAuthorities());
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
-				SecurityContextHolder.getContext().setAuthentication(authentication);
+					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+							userDetail, null, userDetail.getAuthorities());
+					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
+					SecurityContextHolder.getContext().setAuthentication(authentication);
+				}
 			}
+		} catch (Exception e) {
+			System.out.println("Invalid format token!");
 		}
 
 		chain.doFilter(request, response);
