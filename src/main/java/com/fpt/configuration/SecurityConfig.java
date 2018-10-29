@@ -48,8 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 	
 	protected void configure(HttpSecurity http) throws Exception {
-		// Disable crsf cho đường dẫn /admin/**
-		http.csrf().ignoringAntMatchers("/admin/**").disable();
+		// Disable crsf cho đường dẫn /**
+		http.csrf().ignoringAntMatchers("/**").disable();
 
 		http.authorizeRequests().antMatchers("/trip/**").permitAll();
 		http.authorizeRequests().antMatchers("/route/**").permitAll();
@@ -61,6 +61,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
 //				.antMatchers(HttpMethod.GET, "/rest/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')").and()
 				.antMatchers(HttpMethod.GET,"/admin/**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.POST,"/admin/**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.GET,"/staff/**").access("hasRole('ROLE_STAFF')")
+				.antMatchers(HttpMethod.GET,"/staff/**").access("hasRole('ROLE_STAFF')")
 				.and()
 				.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());

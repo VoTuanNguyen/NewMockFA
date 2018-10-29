@@ -11,4 +11,9 @@ import com.fpt.entity.Seat;
 public interface SeatRepository extends JpaRepository<Seat, Integer> {
 	@Query("SELECT s FROM Seat s WHERE s.bus.id = :bus_id AND s.status = 0")
 	List<Seat> getSeatNotAvailableByBusId(@Param("bus_id") int bus_id);
+	
+	@Query("SELECT s FROM Seat s WHERE s.bus.id = :bus_id")
+	List<Seat> getAllSeatByBusId(@Param("bus_id") int bus_id);
+	
+	Seat findById(int id);
 }
