@@ -55,41 +55,41 @@ public class AdminServiceImp implements AdminService {
 	public Page<User> getUserPage(int role, String keySearch, int creator, Pageable pageable) {
 		
 		// filter role
-		if (keySearch.equals("") && creator == -1 && role != -1) {
+		if (keySearch.equals("%-1%") && creator == -1 && role != -1) {
 			return userRepository.getUserByRole(role, pageable);
 		}
 
 		// search user name
-		if (role == -1 && creator == -1 && !keySearch.equals("")) {
+		if (role == -1 && creator == -1 && !keySearch.equals("%-1%")) {
 			return userRepository.getUserByUsername(keySearch, pageable);
 		}
 
 		// filter creator
-		if (keySearch.equals("") && role == -1 && creator != -1) {
+		if (keySearch.equals("%-1%") && role == -1 && creator != -1) {
 			return userRepository.getUserByCreator(creator, pageable);
 		}
 
 		// filter role and creator
-		if (keySearch.equals("") && role != -1 && creator != -1) {
+		if (keySearch.equals("%-1%") && role != -1 && creator != -1) {
 			return userRepository.getUserByRoleCreator(role, creator, pageable);
 		}
 
 		// filter role and search user name
-		if (creator == -1 && role != -1 && !keySearch.equals("")) {
+		if (creator == -1 && role != -1 && !keySearch.equals("%-1%")) {
 			return userRepository.getUserByRoleSearch(role, keySearch, pageable);
 		}
 
 		// filter creator and search user name
-		if (role == -1 && creator != -1 && !keySearch.equals("")) {
+		if (role == -1 && creator != -1 && !keySearch.equals("%-1%")) {
 			return userRepository.getUserByCreatorSearch(creator, keySearch, pageable);
 		}
 
 		// filter role, creator and search user name
-		if (role != -1 && creator != -1 && !keySearch.equals("")) {
-
+		if (role != -1 && creator != -1 && !keySearch.equals("%-1%")) {
+			return userRepository.getUserByRoleCreatorSearch(role, creator, keySearch, pageable);
 		}
 
-		// default role = -1 creator = -1 and keySearch = ""
+		// default role = -1 creator = -1 and keySearch = "%-1%"
 		return userRepository.findAll(pageable);
 	}
 
