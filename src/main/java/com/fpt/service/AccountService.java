@@ -10,4 +10,5 @@ public interface AccountService {
 	boolean checkEmail(String email);
 	boolean checkUsername(String username);
 	String getName(String username);
+	User getUserByUsername(String username);
 }

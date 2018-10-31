@@ -57,4 +57,9 @@ public class AccountServiceImp implements AccountService {
 		return "NULL";
 	}
 
+	@Override
+	public User getUserByUsername(String username) {
+		return userRepository.findUserByUserName(username);
+	}
+
 }

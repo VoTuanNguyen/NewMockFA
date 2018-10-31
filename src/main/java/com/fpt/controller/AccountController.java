@@ -128,4 +128,13 @@ public class AccountController {
 		}
 		return new Message("KO");
 	}
+	
+	@GetMapping("/getuserfromtoken/{token}")
+	public User getUserFromToken(@PathVariable String token) {
+		if(jwtService.validateTokenLogin(token)) {
+			String username = jwtService.getUsernameFromToken(token);
+			return accountService.getUserByUsername(username);
+		}
+		return null;
+	}
 }
