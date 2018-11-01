@@ -11,4 +11,5 @@ public interface AccountService {
 	boolean checkUsername(String username);
 	String getName(String username);
 	User getUserByUsername(String username);
+	boolean updateProfile(User user);
 }

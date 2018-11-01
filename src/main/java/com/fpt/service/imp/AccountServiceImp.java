@@ -62,4 +62,12 @@ public class AccountServiceImp implements AccountService {
 		return userRepository.findUserByUserName(username);
 	}
 
+	@Override
+	public boolean updateProfile(User user) {
+		User us = null;
+		us = userRepository.saveAndFlush(user);
+		
+		return us == null ? false : true;
+	}
+
 }

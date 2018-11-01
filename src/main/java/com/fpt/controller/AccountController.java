@@ -137,4 +137,37 @@ public class AccountController {
 		}
 		return null;
 	}
+	
+	@PostMapping("/updateprofile")
+	public Message updateProfile(@RequestBody User user) {
+		return accountService.updateProfile(user) ? new Message("OK") : new Message("KO");
+	}
+	
+	@PostMapping("/checkoldpass/{token}")
+	public Message checkOldPass(@RequestBody String pass, @PathVariable String token) {
+		if(jwtService.validateTokenLogin(token)) {
+			String username = jwtService.getUsernameFromToken(token);
+			User u = accountService.getUserByUsername(username);
+			if(u!= null) {
+				if(encrypt.matches(pass, u.getPassword())) {
+					return new Message("OK");
+				}else {
+					return new Message("KO");
+				}
+			}
+		}
+		return new Message("KO");
+	}
+	
+	@PostMapping("/updatepass/{token}")
+	public Message updatePass(@RequestBody String newpass, @PathVariable String token) {
+		if(jwtService.validateTokenLogin(token)) {
+			String username = jwtService.getUsernameFromToken(token);
+			User u = accountService.getUserByUsername(username);
+			u.setPassword(newpass);
+			
+			return accountService.updateProfile(u) ? new Message("OK") : new Message("KO");
+		}
+		return new Message("KO");
+	}
 }
