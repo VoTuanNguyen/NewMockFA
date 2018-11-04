@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fpt.entity.Booking;
 import com.fpt.entity.User;
+import com.fpt.model.Message;
 import com.fpt.service.AccountService;
 import com.fpt.service.BookingService;
 import com.fpt.service.JwtService;
@@ -40,13 +41,25 @@ public class BookingController {
 		return bookingService.getBookingByDT(trip_id, date);
 	}
 	
-	@GetMapping("/getlistbooking/{token}")
-	public Page<Booking> getListBookingByUser(@PathVariable String token, Pageable pageable){
+	@GetMapping("/getlistbooking/{token}/{date}/{time}/{filter}")
+	public Page<Booking> getListBookingByUser(@PathVariable String token, @PathVariable String date, @PathVariable int time, @PathVariable String filter, Pageable pageable) throws ParseException{
 		if (jwtService.validateTokenLogin(token)) {
 			String username = jwtService.getUsernameFromToken(token);
 			User user = accountService.getUserByUsername(username);
-			return bookingService.getListBookingByUser(user.getId(), pageable);
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			if(!date.equals("1") && time != 1) {
+				Date d = sdf.parse(date);
+				return bookingService.getListBookingByUser(user.getId(), d, time, filter, pageable);
+			}else {
+				return bookingService.getListBookingByUser(user.getId(), null, time, filter, pageable);
+			}
 		} 
 		return null;
+	}
+	
+	@GetMapping("/updatestatus/{id}/{status}")
+	public Message updateStatus(@PathVariable int id, @PathVariable int status) {
+		return bookingService.updateStatus(id, status) ? new Message("OK") : new Message("KO");
 	}
 }

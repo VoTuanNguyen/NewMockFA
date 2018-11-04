@@ -10,5 +10,6 @@ import com.fpt.entity.Booking;
 
 public interface BookingService {
 	List<Booking> getBookingByDT(int trip_id, Date date);
-	Page<Booking> getListBookingByUser(int user_id, Pageable pageable);
+	Page<Booking> getListBookingByUser(int user_id, Date date, int time, String filter, Pageable pageable);
+	boolean updateStatus(int id, int status);
 }
