@@ -1,5 +1,7 @@
 package com.fpt.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +16,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Query("SELECT u FROM User u WHERE u.email = :email")
 	User findUserByEmail(@Param("email") String email);
+	
+	@Query("SELECT u.role.id as id, count(*) as sl FROM User u GROUP BY u.role.id")
+	List<?> totalUser();
 
 	// search by user name
 	@Query("SELECT u FROM User u WHERE u.username like :keySearch")

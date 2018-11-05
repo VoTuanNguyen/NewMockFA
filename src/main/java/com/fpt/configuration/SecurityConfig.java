@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 	
 	protected void configure(HttpSecurity http) throws Exception {
-		// Disable crsf cho đường dẫn /**
+		// Disable crsf for url /**
 		http.csrf().ignoringAntMatchers("/**").disable();
 
 		http.authorizeRequests().antMatchers("/trip/**").permitAll();
