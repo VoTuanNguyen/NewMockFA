@@ -60,7 +60,6 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 		} catch (Exception e) {
 			System.out.println("Invalid format token!");
 		}
-
 		chain.doFilter(request, response);
 	}
 }

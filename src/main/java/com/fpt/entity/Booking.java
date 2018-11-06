@@ -60,6 +60,20 @@ public class Booking {
 		this.seatNumber = seatNumber;
 	}
 
+	public Booking(String name, String email, String phone, String address, User user, Trip trip, Date date, int status,
+			String seatNumber) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.phone = phone;
+		this.address = address;
+		this.user = user;
+		this.trip = trip;
+		this.date = date;
+		this.status = status;
+		this.seatNumber = seatNumber;
+	}
+
 	public int getId() {
 		return id;
 	}
