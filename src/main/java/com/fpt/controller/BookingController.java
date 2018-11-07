@@ -23,6 +23,7 @@ import com.fpt.model.SaveBooking;
 import com.fpt.service.AccountService;
 import com.fpt.service.BookingService;
 import com.fpt.service.JwtService;
+import com.fpt.service.PaymentService;
 
 @RestController
 @RequestMapping("/booking")
@@ -39,6 +40,9 @@ public class BookingController {
 
 	@Autowired
 	private AccountService accountSerivce;
+
+	@Autowired
+	private PaymentService paymentService;
 
 	@GetMapping("/getbooking/{trip_id}/{string_date}")
 	public List<Booking> getBookingByDT(@PathVariable int trip_id, @PathVariable String string_date)
@@ -91,8 +95,18 @@ public class BookingController {
 			User user = accountSerivce.getUserByUsername(username);
 			user_id = user.getId();
 		}
+		// balance > order money
+		if (paymentService.checkBalance(save.getPayment().getId(), save.getPayment().getBalance())) {
+			// process payment for order(booking ticket) before save
+			if (!paymentService.updateBalance(save.getPayment().getId(), save.getPayment().getBalance())) {
+				return new Message("PF");
+			}
+			//save booking
+			return new Message(String.valueOf(
+					bookingService.saveBookingList(trip_id, user_id, save.getUser(), save.getLstSeat(), date)));
+		} else {
+			return new Message("NEM");
+		}
 
-		return new Message(String.valueOf(
-				bookingService.saveBookingList(trip_id, user_id, save.getUser(), save.getLstSeat(), date)));
 	}
 }
