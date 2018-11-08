@@ -41,21 +41,39 @@ public class BookingServiceImp implements BookingService {
 	}
 
 	@Override
-	public Page<Booking> getListBookingByUser(int user_id, Date date, int time, String filter, Pageable pageable) {
+	public Page<Booking> getListBookingByUser(int user_id, Date date, int time, String filter, String filter_date,
+			Pageable pageable) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date start_date = new Date(), end_date = new Date();
+		try {
+			if (filter_date.equals("-1")) {
+
+				start_date = sdf.parse("2000-01-01");
+				end_date = sdf.parse("2100-01-01");
+			} else {
+				start_date = end_date = sdf.parse(filter_date);
+
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		// default
 		if (date == null || time == 1) {
-			return bookingRepository.getListBookingByUser(user_id, pageable);
+			return bookingRepository.getListBookingByUser(user_id, start_date, end_date, pageable);
 		}
 		// filter
 		switch (filter) {
 		case "waiting":
-			return bookingRepository.getListBookingByUserFilterWaiting(user_id, date, time, pageable);
+			return bookingRepository.getListBookingByUserFilterWaiting(user_id, date, time, start_date, end_date,
+					pageable);
 		case "expired":
-			return bookingRepository.getListBookingByUserFilterExpired(user_id, date, time, pageable);
+			return bookingRepository.getListBookingByUserFilterExpired(user_id, date, time, start_date, end_date,
+					pageable);
 		case "canceled":
-			return bookingRepository.getListBookingByUserFilterCanceled(user_id, date, time, pageable);
+			return bookingRepository.getListBookingByUserFilterCanceled(user_id, date, time, start_date, end_date,
+					pageable);
 		default:
-			return bookingRepository.getListBookingByUser(user_id, pageable);
+			return bookingRepository.getListBookingByUser(user_id, start_date, end_date, pageable);
 		}
 	}
 
@@ -160,11 +178,11 @@ public class BookingServiceImp implements BookingService {
 
 		for (String s : lstSeat) {
 			b = new Booking(user.getName(), user.getEmail(), user.getPhone(), user.getAddress(), u, t, d, 1, s);
-			if(bookingRepository.saveAndFlush(b) != null) {
-				saveNumber ++;
+			if (bookingRepository.saveAndFlush(b) != null) {
+				saveNumber++;
 			}
 		}
-		
+
 		return saveNumber;
 	}
 
