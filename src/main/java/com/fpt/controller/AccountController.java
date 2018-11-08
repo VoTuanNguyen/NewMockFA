@@ -171,7 +171,7 @@ public class AccountController {
 		if (jwtService.validateTokenLogin(token)) {
 			String username = jwtService.getUsernameFromToken(token);
 			User u = accountService.getUserByUsername(username);
-			u.setPassword(newpass);
+			u.setPassword(encrypt.encode(newpass));
 
 			return accountService.updateProfile(u) ? new Message("OK") : new Message("KO");
 		}
