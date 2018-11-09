@@ -70,8 +70,12 @@ public class BookingController {
 		return null;
 	}
 
-	@GetMapping("/updatestatus/{id}/{status}")
-	public Message updateStatus(@PathVariable int id, @PathVariable int status) {
+	@GetMapping("/updatestatus/{id}/{status}/{moneyrefund}")
+	public Message updateStatus(@PathVariable int id, @PathVariable int status, @PathVariable int moneyrefund) {
+		Booking b = bookingService.getOne(id);
+		if(!paymentService.updateBalance(b.getCardNumber(), moneyrefund)) {
+			return new Message("KO");
+		}
 		return bookingService.updateStatus(id, status) ? new Message("OK") : new Message("KO");
 	}
 
@@ -86,8 +90,8 @@ public class BookingController {
 	}
 
 	// save list booking for customer
-	@PostMapping("savebookinglist/{trip_id}/{token}/{date}")
-	public Message saveBooking(@PathVariable int trip_id, @PathVariable String token, @PathVariable String date,
+	@PostMapping("savebookinglist/{trip_id}/{token}/{date}/{cardNumber}")
+	public Message saveBooking(@PathVariable int trip_id, @PathVariable String token, @PathVariable String date, @PathVariable String cardNumber,
 			@RequestBody SaveBooking save) throws ParseException {
 		int user_id = -1;
 		if (!token.equals("-1")) {
@@ -103,7 +107,7 @@ public class BookingController {
 			}
 			//save booking
 			return new Message(String.valueOf(
-					bookingService.saveBookingList(trip_id, user_id, save.getUser(), save.getLstSeat(), date)));
+					bookingService.saveBookingList(trip_id, user_id, save.getUser(), save.getLstSeat(), date, cardNumber)));
 		} else {
 			return new Message("NEM");
 		}

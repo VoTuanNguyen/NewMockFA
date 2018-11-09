@@ -162,9 +162,13 @@ public class BookingServiceImp implements BookingService {
 
 	// save booking for customer
 	@Override
-	public int saveBookingList(int trip_id, int user_id, User user, String[] lstSeat, String date)
+	public int saveBookingList(int trip_id, int user_id, User user, String[] lstSeat, String date, String cardNumber)
 			throws ParseException {
 		int saveNumber = 0;
+		
+		if(cardNumber.equals("-1")) {
+			return 0;
+		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date d = sdf.parse(date);
@@ -177,7 +181,7 @@ public class BookingServiceImp implements BookingService {
 		}
 
 		for (String s : lstSeat) {
-			b = new Booking(user.getName(), user.getEmail(), user.getPhone(), user.getAddress(), u, t, d, 1, s);
+			b = new Booking(user.getName(), user.getEmail(), user.getPhone(), user.getAddress(), u, t, d, 1, s, cardNumber);
 			if (bookingRepository.saveAndFlush(b) != null) {
 				saveNumber++;
 			}
@@ -185,5 +189,11 @@ public class BookingServiceImp implements BookingService {
 
 		return saveNumber;
 	}
+
+	@Override
+	public Booking getOne(int id) {
+		return bookingRepository.getOne(id);
+	}
+	
 
 }

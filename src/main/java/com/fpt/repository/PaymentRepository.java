@@ -11,4 +11,7 @@ import com.fpt.entity.Payment;
 public interface PaymentRepository  extends JpaRepository<Payment, Integer>{
 	@Query("SELECT p FROM Payment p WHERE p.cardNumber = :cardNumber AND p.expMonth = :expMonth AND p.cvv = :cvv AND p.expYear = :expYear")
 	Payment getPayment(@Param("cardNumber") String cardNumber, @Param("expMonth") String expMonth, @Param("cvv") int cvv, @Param("expYear") int expYear);
+	
+	@Query("SELECT p FROM Payment p WHERE p.cardNumber = :cardNumber")
+	Payment checkPayment(@Param("cardNumber") String cardNumber);
 }

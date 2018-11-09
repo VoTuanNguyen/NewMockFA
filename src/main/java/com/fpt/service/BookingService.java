@@ -16,5 +16,6 @@ public interface BookingService {
 	Page<Booking> getListBookingByUser(int user_id, Date date, int time, String filter, String filter_date, Pageable pageable);
 	boolean updateStatus(int id, int status);
 	Message checkBeforeBooking(int trip_id, Date date, String[] lstSeat, int bus_id);
-	int saveBookingList(int trip_id, int user_id, User user, String[] lstSeat, String date) throws ParseException;
+	int saveBookingList(int trip_id, int user_id, User user, String[] lstSeat, String date, String cardNumber) throws ParseException;
+	Booking getOne(int id);
 }

@@ -33,4 +33,16 @@ public class PaymentServiceImp implements PaymentService{
 		return paymentRepository.saveAndFlush(payment) != null;
 	}
 
+	@Override
+	public Payment checkPayment(String cardNumber) {
+		return paymentRepository.checkPayment(cardNumber);
+	}
+
+	@Override
+	public boolean updateBalance(String cardNumber, double balance) {
+		Payment p = paymentRepository.checkPayment(cardNumber);
+		p.setBalance(p.getBalance() + balance);
+		return paymentRepository.saveAndFlush(p) != null;
+	}
+
 }

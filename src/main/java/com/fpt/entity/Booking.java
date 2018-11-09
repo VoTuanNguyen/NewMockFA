@@ -40,13 +40,30 @@ public class Booking {
 	private int status;
 	@Column(name = "seatnumber")
 	private String seatNumber;
+	@Column(name = "cardnumber")
+	private String cardNumber;
 
 	public Booking() {
 		super();
 	}
 
+	public Booking(String name, String email, String phone, String address, User user, Trip trip, Date date, int status,
+			String seatNumber, String cardNumber) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.phone = phone;
+		this.address = address;
+		this.user = user;
+		this.trip = trip;
+		this.date = date;
+		this.status = status;
+		this.seatNumber = seatNumber;
+		this.cardNumber = cardNumber;
+	}
+
 	public Booking(int id, String name, String email, String phone, String address, User user, Trip trip, Date date,
-			int status, String seatNumber) {
+			int status, String seatNumber, String cardNumber) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -58,20 +75,7 @@ public class Booking {
 		this.date = date;
 		this.status = status;
 		this.seatNumber = seatNumber;
-	}
-
-	public Booking(String name, String email, String phone, String address, User user, Trip trip, Date date, int status,
-			String seatNumber) {
-		super();
-		this.name = name;
-		this.email = email;
-		this.phone = phone;
-		this.address = address;
-		this.user = user;
-		this.trip = trip;
-		this.date = date;
-		this.status = status;
-		this.seatNumber = seatNumber;
+		this.cardNumber = cardNumber;
 	}
 
 	public int getId() {
@@ -154,11 +158,19 @@ public class Booking {
 		this.seatNumber = seatNumber;
 	}
 
+	public String getCardNumber() {
+		return cardNumber;
+	}
+
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
+	}
+
 	@Override
 	public String toString() {
 		return "Booking [id=" + id + ", name=" + name + ", email=" + email + ", phone=" + phone + ", address=" + address
 				+ ", user=" + user + ", trip=" + trip + ", date=" + date + ", status=" + status + ", seatNumber="
-				+ seatNumber + "]";
+				+ seatNumber + ", cardNumber=" + cardNumber + "]";
 	}
 
 }

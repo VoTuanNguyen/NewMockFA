@@ -15,7 +15,7 @@ public class Payment {
 	@Column(name = "name", columnDefinition = "nvarchar(50)")
 	private String name;
 	
-	@Column(name = "cardnumber", columnDefinition = "varchar(20)")
+	@Column(name = "cardnumber", columnDefinition = "varchar(20)", unique = true)
 	private String cardNumber;
 	
 	@Column(name = "expmonth", columnDefinition = "varchar(10)")
