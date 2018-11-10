@@ -3,6 +3,8 @@ package com.fpt.service.imp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.fpt.entity.Booking;
@@ -25,8 +27,8 @@ public class StaffServiceImp implements StaffService {
 	private SeatRepository seatRepository;
 	
 	@Override
-	public List<Bus> getAllBus() {
-		return busRepository.findAll();
+	public Page<Bus> getBus(String cardNumber, Pageable pageable) {
+		return busRepository.getBus(cardNumber, pageable);
 	}
 
 	@Override
@@ -35,8 +37,8 @@ public class StaffServiceImp implements StaffService {
 	}
 
 	@Override
-	public List<Seat> getAllSeatOfBus(int busId) {
-		return seatRepository.getAllSeatByBusId(busId);
+	public List<Seat> getAllSeatOfBus(String cardNumber) {
+		return seatRepository.getAllSeatByBusId(cardNumber);
 	}
 
 	@Override
