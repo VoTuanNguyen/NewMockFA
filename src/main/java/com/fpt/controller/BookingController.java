@@ -52,9 +52,9 @@ public class BookingController {
 		return bookingService.getBookingByDT(trip_id, date);
 	}
 
-	@GetMapping("/getlistbooking/{token}/{date}/{time}/{filter}/{filter_date}")
+	@GetMapping("/getlistbooking/{token}/{date}/{time}/{filter}/{start_date}/{end_date}")
 	public Page<Booking> getListBookingByUser(@PathVariable String token, @PathVariable String date,
-			@PathVariable int time, @PathVariable String filter, @PathVariable String filter_date, Pageable pageable) throws ParseException {
+			@PathVariable int time, @PathVariable String filter, @PathVariable String start_date, @PathVariable String end_date, Pageable pageable) throws ParseException {
 		if (jwtService.validateTokenLogin(token)) {
 			String username = jwtService.getUsernameFromToken(token);
 			User user = accountService.getUserByUsername(username);
@@ -62,9 +62,9 @@ public class BookingController {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			if (!date.equals("1") && time != 1) {
 				Date d = sdf.parse(date);
-				return bookingService.getListBookingByUser(user.getId(), d, time, filter, filter_date, pageable);
+				return bookingService.getListBookingByUser(user.getId(), d, time, filter, start_date, end_date, pageable);
 			} else {
-				return bookingService.getListBookingByUser(user.getId(), null, time, filter, filter_date, pageable);
+				return bookingService.getListBookingByUser(user.getId(), null, time, filter, start_date, end_date, pageable);
 			}
 		}
 		return null;
