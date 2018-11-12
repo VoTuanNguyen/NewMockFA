@@ -41,21 +41,12 @@ public class BookingServiceImp implements BookingService {
 	}
 
 	@Override
-	public Page<Booking> getListBookingByUser(int user_id, Date date, int time, String filter, String start_date,
-			String end_date, Pageable pageable) {
+	public Page<Booking> getListBookingByUser(int user_id, String start_date, String end_date, Pageable pageable) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date startdate = new Date(), enddate = new Date();
 		try {
 			if (start_date.equals("-1") && end_date.equals("-1")) {
-
 				startdate = sdf.parse("2000-01-01");
-				enddate = sdf.parse("2100-01-01");
-			} else if (start_date.equals("-1")) {
-				startdate = sdf.parse("2000-01-01");
-				enddate = sdf.parse(end_date);
-
-			} else if (end_date.equals("-1")) {
-				startdate = sdf.parse(start_date);
 				enddate = sdf.parse("2100-01-01");
 			} else {
 				startdate = sdf.parse(start_date);
@@ -64,24 +55,8 @@ public class BookingServiceImp implements BookingService {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		// default
-		if (date == null || time == 1) {
-			return bookingRepository.getListBookingByUser(user_id, startdate, enddate, pageable);
-		}
-		// filter
-		switch (filter) {
-		case "waiting":
-			return bookingRepository.getListBookingByUserFilterWaiting(user_id, date, time, startdate, enddate,
-					pageable);
-		case "expired":
-			return bookingRepository.getListBookingByUserFilterExpired(user_id, date, time, startdate, enddate,
-					pageable);
-		case "canceled":
-			return bookingRepository.getListBookingByUserFilterCanceled(user_id, date, time, startdate, enddate,
-					pageable);
-		default:
-			return bookingRepository.getListBookingByUser(user_id, startdate, enddate, pageable);
-		}
+
+		return bookingRepository.getListBookingByUser(user_id, startdate, enddate, pageable);
 	}
 
 	@Override

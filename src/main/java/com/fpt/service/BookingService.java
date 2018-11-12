@@ -13,7 +13,7 @@ import com.fpt.model.Message;
 
 public interface BookingService {
 	List<Booking> getBookingByDT(int trip_id, Date date);
-	Page<Booking> getListBookingByUser(int user_id, Date date, int time, String filter, String start_date, String end_date, Pageable pageable);
+	Page<Booking> getListBookingByUser(int user_id, String start_date, String end_date, Pageable pageable);
 	boolean updateStatus(int id, int status);
 	Message checkBeforeBooking(int trip_id, Date date, String[] lstSeat, int bus_id);
 	int saveBookingList(int trip_id, int user_id, User user, String[] lstSeat, String date, String cardNumber) throws ParseException;

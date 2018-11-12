@@ -1,5 +1,6 @@
 package com.fpt.service.imp;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.fpt.entity.Booking;
 import com.fpt.entity.Bus;
 import com.fpt.entity.Seat;
-import com.fpt.entity.User;
 import com.fpt.repository.BookingRepository;
 import com.fpt.repository.BusRepository;
 import com.fpt.repository.SeatRepository;
@@ -51,8 +51,8 @@ public class StaffServiceImp implements StaffService {
 	}
 
 	@Override
-	public boolean updateInfo(User user) {
-		return false;
+	public Page<Booking> getBooking(String search, Date start_date, Date end_date, Pageable pageable) {
+		return bookingRepository.getListBooking(start_date, end_date, search, pageable);
 	}
 
 }

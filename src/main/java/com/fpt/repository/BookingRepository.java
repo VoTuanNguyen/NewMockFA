@@ -17,19 +17,10 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
 	@Query("SELECT b FROM Booking b WHERE b.user.id = :user_id AND b.date >= :start_date AND b.date <= :end_date ORDER BY b.id DESC")
 	Page<Booking> getListBookingByUser(@Param("user_id") int user_id, @Param("start_date") Date start_date, @Param("end_date") Date end_date, Pageable pageable);
-
-	@Query("SELECT b FROM Booking b WHERE b.user.id = :user_id AND (b.date > :date OR (b.date = :date AND CAST(b.trip.time as int) > :time)) "
-			+ "AND b.status = 1 AND b.date >= :start_date AND b.date <= :end_date ORDER BY b.id DESC")
-	Page<Booking> getListBookingByUserFilterWaiting(@Param("user_id") int user_id, @Param("date") Date date,
-			@Param("time") int time, @Param("start_date") Date start_date, @Param("end_date") Date end_date, Pageable pageable);
-
-	@Query("SELECT b FROM Booking b WHERE b.user.id = :user_id AND (b.date < :date OR (b.date = :date AND CAST(b.trip.time as int) < :time)) "
-			+ "AND b.date >= :start_date AND b.date <= :end_date ORDER BY b.id DESC")
-	Page<Booking> getListBookingByUserFilterExpired(@Param("user_id") int user_id, @Param("date") Date date,
-			@Param("time") int time, @Param("start_date") Date start_date, @Param("end_date") Date end_date, Pageable pageable);
-
-	@Query("SELECT b FROM Booking b WHERE b.user.id = :user_id AND b.status = 0 AND (b.date > :date OR (b.date = :date AND CAST(b.trip.time as int) > :time)) "
-			+ "AND b.date >= :start_date AND b.date <= :end_date ORDER BY b.id DESC")
-	Page<Booking> getListBookingByUserFilterCanceled(@Param("user_id") int user_id, @Param("date") Date date,
-			@Param("time") int time, @Param("start_date") Date start_date, @Param("end_date") Date end_date, Pageable pageable);
+	
+	@Query("SELECT b FROM Booking b WHERE b.date >= :start_date AND b.date <= :end_date AND "
+			+ "((b.name LIKE :search OR b.email LIKE :search OR b.phone LIKE :search) OR "
+			+ "(b.user.name LIKE :search OR b.user.email LIKE :search OR b.user.phone LIKE :search)) "
+			+ "ORDER BY b.id DESC")
+	Page<Booking> getListBooking(@Param("start_date") Date start_date, @Param("end_date") Date end_date, @Param("search") String search, Pageable pageable);
 }

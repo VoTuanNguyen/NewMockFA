@@ -1,7 +1,5 @@
 package com.fpt.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,7 +14,6 @@ import com.fpt.entity.User;
 import com.fpt.model.LoginModel;
 import com.fpt.model.Message;
 import com.fpt.model.MessageLogin;
-import com.fpt.repository.UserRepository;
 import com.fpt.service.AccountService;
 import com.fpt.service.JwtService;
 
@@ -191,10 +188,14 @@ public class AccountController {
 		return new Message("KO");
 	}
 	
-	@Autowired
-	private UserRepository userRepository;
-	@GetMapping("/getabc")
-	public List<?> getabc(){
-		return userRepository.totalUser();
+	//get url
+	@GetMapping("/geturl/{token}")
+	public Message getUrl(@PathVariable String token) {
+		if (jwtService.validateTokenLogin(token)) {
+			String username = jwtService.getUsernameFromToken(token);
+			User u = accountService.getUserByUsername(username);
+			return new Message(String.valueOf(u.getRole().getId()));
+		}
+		return new Message("none");
 	}
 }
