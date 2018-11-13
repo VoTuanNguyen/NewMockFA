@@ -31,17 +31,17 @@ public class AdminController {
 	@Autowired
 	private RoleService roleService;
 
-	@RequestMapping("/access")
+	@GetMapping("/access")
 	public Message checkAccess() {
 		return new Message("Access");
 	}
 
-	@RequestMapping("/getalluser")
+	@GetMapping("/getalluser")
 	public List<User> getAllUser() {
 		return adminService.findAll();
 	}
 
-	@RequestMapping("/getuserpage/{role}/{keySearch}/{creator}")
+	@GetMapping("/getuserpage/{role}/{keySearch}/{creator}")
 	public Page<User> getUserPage(@PathVariable int role, @PathVariable String keySearch, @PathVariable int creator,
 			Pageable pageable) {
 		return adminService.getUserPage(role, "%" + keySearch + "%", creator, pageable);
