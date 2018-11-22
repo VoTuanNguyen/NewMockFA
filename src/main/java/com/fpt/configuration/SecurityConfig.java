@@ -78,6 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/seat/**").permitAll();
 		http.authorizeRequests().antMatchers("/account/**").permitAll();
 		http.authorizeRequests().antMatchers("/payment/**").permitAll();
+		http.authorizeRequests().antMatchers("/jsa/**").permitAll();
 
 		http.antMatcher("/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
