@@ -49,29 +49,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
-	
+
 	@Bean
-    public BCryptPasswordEncoder encoder(){
-        return new BCryptPasswordEncoder();
-    }
-	//configuration swagger 2
-	@Bean
-    public Docket api() { 
-        return new Docket(DocumentationType.SWAGGER_2)  
-          .select()                                  
-          .apis(RequestHandlerSelectors.any())              
-          .paths(PathSelectors.any())                          
-          .build();                                           
-    }
-	
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	    registry.addResourceHandler("swagger-ui.html")
-	      .addResourceLocations("classpath:/META-INF/resources/");
-	 
-	    registry.addResourceHandler("/webjars/**")
-	      .addResourceLocations("classpath:/META-INF/resources/webjars/");
+	public BCryptPasswordEncoder encoder() {
+		return new BCryptPasswordEncoder();
 	}
-	
+
+	// configuration swagger 2
+	@Bean
+	public Docket api() {
+		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
+				.paths(PathSelectors.any()).build();
+	}
+
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+
+		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+	}
+
 	protected void configure(HttpSecurity http) throws Exception {
 		// Disable crsf for url /**
 		http.csrf().ignoringAntMatchers("/**").disable();
@@ -82,16 +78,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/seat/**").permitAll();
 		http.authorizeRequests().antMatchers("/account/**").permitAll();
 		http.authorizeRequests().antMatchers("/payment/**").permitAll();
-		
-		http.antMatcher("/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-//				.antMatchers(HttpMethod.GET, "/rest/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')").and()
-				.antMatchers(HttpMethod.GET,"/admin/**").access("hasRole('ROLE_ADMIN')")
-				.antMatchers(HttpMethod.POST,"/admin/**").access("hasRole('ROLE_ADMIN')")
-				.antMatchers(HttpMethod.PUT,"/admin/**").access("hasRole('ROLE_ADMIN')")
-				.antMatchers(HttpMethod.GET,"/staff/**").access("hasRole('ROLE_STAFF')")
-				.antMatchers(HttpMethod.POST,"/staff/**").access("hasRole('ROLE_STAFF')")
-				.and()
+
+		http.antMatcher("/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+				// .antMatchers(HttpMethod.GET, "/rest/**").access("hasRole('ROLE_ADMIN') or
+				// hasRole('ROLE_USER')").and()
+				.antMatchers(HttpMethod.GET, "/admin/**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.POST, "/admin/**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.PUT, "/admin/**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.GET, "/staff/**").access("hasRole('ROLE_STAFF')")
+				.antMatchers(HttpMethod.POST, "/staff/**").access("hasRole('ROLE_STAFF')").and()
 				.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
 	}

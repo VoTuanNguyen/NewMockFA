@@ -15,7 +15,7 @@ public class PaymentServiceImp implements PaymentService{
 
 	@Override
 	public int checkPayment(String cardNumber, int cvv, String expMonth, int expYear) {
-		Payment payment = paymentRepository.getPayment(cardNumber, expMonth, cvv, expYear);
+		Payment payment = paymentRepository.getPaymentByCardNumberAndExpMonthAndCvvAndExpYear(cardNumber, expMonth, cvv, expYear);
 		return payment != null ? payment.getId() : -1;
 	}
 
@@ -35,12 +35,12 @@ public class PaymentServiceImp implements PaymentService{
 
 	@Override
 	public Payment checkPayment(String cardNumber) {
-		return paymentRepository.checkPayment(cardNumber);
+		return paymentRepository.findPaymentByCardNumber(cardNumber);
 	}
 
 	@Override
 	public boolean updateBalance(String cardNumber, double balance) {
-		Payment p = paymentRepository.checkPayment(cardNumber);
+		Payment p = paymentRepository.findPaymentByCardNumber(cardNumber);
 		p.setBalance(p.getBalance() + balance);
 		return paymentRepository.saveAndFlush(p) != null;
 	}

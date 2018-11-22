@@ -161,7 +161,7 @@ public class BookingServiceImp implements BookingService {
 		if (user_id != -1) {
 			u = userRepository.getOne(user_id);
 		}
-
+		
 		for (String s : lstSeat) {
 			b = new Booking(user.getName(), user.getEmail(), user.getPhone(), user.getAddress(), u, t, d, 1, s,
 					cardNumber);

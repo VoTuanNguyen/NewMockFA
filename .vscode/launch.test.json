@@ -1,0 +1,30 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "MyMockProject",
+                "projectName": "MyMockProject",
+                "workingDirectory": "c:\\Users\\nguyenvt2\\Desktop\\NewMockFA",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "MyMockProject",
+                "projectName": "MyMockProject",
+                "workingDirectory": "c:\\Users\\nguyenvt2\\Desktop\\NewMockFA",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}

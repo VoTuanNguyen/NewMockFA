@@ -1,6 +1,8 @@
 package com.fpt.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import com.fpt.entity.User;
 import com.fpt.model.LoginModel;
 import com.fpt.model.Message;
 import com.fpt.model.MessageLogin;
+import com.fpt.repository.UserRepository;
 import com.fpt.service.AccountService;
 import com.fpt.service.JwtService;
 
@@ -128,8 +131,8 @@ public class AccountController {
 		}
 		return new Message("KO");
 	}
-	
-	//get user from token
+
+	// get user from token
 	@GetMapping("/getuserfromtoken/{token}")
 	public User getUserFromToken(@PathVariable String token) {
 		if (jwtService.validateTokenLogin(token)) {
@@ -139,13 +142,13 @@ public class AccountController {
 		return null;
 	}
 
-	//update profile
+	// update profile
 	@PostMapping("/updateprofile")
 	public Message updateProfile(@RequestBody User user) {
 		return accountService.updateProfile(user) ? new Message("OK") : new Message("KO");
 	}
 
-	//check old password when change password
+	// check old password when change password
 	@PostMapping("/checkoldpass/{token}")
 	public Message checkOldPass(@RequestBody String pass, @PathVariable String token) {
 		if (jwtService.validateTokenLogin(token)) {
@@ -162,7 +165,7 @@ public class AccountController {
 		return new Message("KO");
 	}
 
-	//change password
+	// change password
 	@PostMapping("/updatepass/{token}")
 	public Message updatePass(@RequestBody String newpass, @PathVariable String token) {
 		if (jwtService.validateTokenLogin(token)) {
@@ -175,7 +178,7 @@ public class AccountController {
 		return new Message("KO");
 	}
 
-	//check token valid or invalid
+	// check token valid or invalid
 	@GetMapping("/checktoken/{token}")
 	public Message checkTokenExpire(@PathVariable String token) {
 		try {
@@ -187,8 +190,8 @@ public class AccountController {
 		}
 		return new Message("KO");
 	}
-	
-	//get url
+
+	// get url
 	@GetMapping("/geturl/{token}")
 	public Message getUrl(@PathVariable String token) {
 		if (jwtService.validateTokenLogin(token)) {
@@ -197,5 +200,13 @@ public class AccountController {
 			return new Message(String.valueOf(u.getRole().getId()));
 		}
 		return new Message("none");
+	}
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@GetMapping("/demo/{key}")
+	public Page<User> getA(@PathVariable String key, Pageable pageable) {
+		return userRepository.getUserByUsernameContaining(key, pageable);
 	}
 }

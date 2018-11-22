@@ -43,8 +43,8 @@ public class BookingController {
 
 	@Autowired
 	private PaymentService paymentService;
-	
-	//get list booking of trip and date
+
+	// get list booking of trip and date
 	@GetMapping("/getbooking/{trip_id}/{string_date}")
 	public List<Booking> getBookingByDT(@PathVariable int trip_id, @PathVariable String string_date)
 			throws ParseException {
@@ -53,7 +53,7 @@ public class BookingController {
 		return bookingService.getBookingByDT(trip_id, date);
 	}
 
-	//get list booking of user
+	// get list booking of user
 	@GetMapping("/getlistbooking/{token}/{start_date}/{end_date}")
 	public Page<Booking> getListBookingByUser(@PathVariable String token, @PathVariable String start_date,
 			@PathVariable String end_date, Pageable pageable) throws ParseException {
@@ -65,11 +65,11 @@ public class BookingController {
 		return null;
 	}
 
-	//cancel booking
+	// cancel booking
 	@GetMapping("/updatestatus/{id}/{status}/{moneyrefund}")
-	public Message updateStatus(@PathVariable int id, @PathVariable int status, @PathVariable int moneyrefund) {
+	public Message updateStatus(@PathVariable int id, @PathVariable int status, @PathVariable double moneyrefund) {
 		Booking b = bookingService.getOne(id);
-		if(!paymentService.updateBalance(b.getCardNumber(), moneyrefund)) {
+		if (!paymentService.updateBalance(b.getCardNumber(), moneyrefund)) {
 			return new Message("KO");
 		}
 		return bookingService.updateStatus(id, status) ? new Message("OK") : new Message("KO");
@@ -86,9 +86,9 @@ public class BookingController {
 	}
 
 	// save list booking for customer
-	@PostMapping("savebookinglist/{trip_id}/{token}/{date}/{cardNumber}")
-	public Message saveBooking(@PathVariable int trip_id, @PathVariable String token, @PathVariable String date, @PathVariable String cardNumber,
-			@RequestBody SaveBooking save) throws ParseException {
+	@PostMapping("/savebookinglist/{trip_id}/{token}/{date}/{cardNumber}")
+	public Message saveBooking(@PathVariable int trip_id, @PathVariable String token, @PathVariable String date,
+			@PathVariable String cardNumber, @RequestBody SaveBooking save) throws ParseException {
 		int user_id = -1;
 		if (!token.equals("-1")) {
 			String username = jwtService.getUsernameFromToken(token);
@@ -101,11 +101,11 @@ public class BookingController {
 			if (!paymentService.updateBalance(save.getPayment().getId(), save.getPayment().getBalance())) {
 				return new Message("PF");
 			}
-			//save booking
-			return new Message(String.valueOf(
-					bookingService.saveBookingList(trip_id, user_id, save.getUser(), save.getLstSeat(), date, cardNumber)));
+			// save booking
+			return new Message(String.valueOf(bookingService.saveBookingList(trip_id, user_id, save.getUser(),
+					save.getLstSeat(), date, cardNumber)));
 		} else {
-			return new Message("NEM");
+			return new Message("NEM"); // not enough money to payment
 		}
 
 	}

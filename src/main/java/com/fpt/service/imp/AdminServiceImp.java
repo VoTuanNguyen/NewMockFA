@@ -53,7 +53,7 @@ public class AdminServiceImp implements AdminService {
 
 	@Override
 	public Page<User> getUserPage(int role, String keySearch, int creator, Pageable pageable) {
-		
+
 		// filter role
 		if (keySearch.equals("%-1%") && creator == -1 && role != -1) {
 			return userRepository.getUserByRole(role, pageable);
@@ -61,7 +61,7 @@ public class AdminServiceImp implements AdminService {
 
 		// search user name
 		if (role == -1 && creator == -1 && !keySearch.equals("%-1%")) {
-			return userRepository.getUserByUsername(keySearch, pageable);
+			return userRepository.getUserByUsernameContaining(keySearch, pageable);
 		}
 
 		// filter creator
@@ -81,7 +81,7 @@ public class AdminServiceImp implements AdminService {
 
 		// filter creator and search user name
 		if (role == -1 && creator != -1 && !keySearch.equals("%-1%")) {
-			return userRepository.getUserByCreatorSearch(creator, keySearch, pageable);
+			return userRepository.getUserByCreatorAndUsernameContaining(creator, keySearch, pageable);
 		}
 
 		// filter role, creator and search user name

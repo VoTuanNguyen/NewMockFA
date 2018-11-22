@@ -25,10 +25,10 @@ public class StaffServiceImp implements StaffService {
 	private BookingRepository bookingRepository;
 	@Autowired
 	private SeatRepository seatRepository;
-	
+
 	@Override
 	public Page<Bus> getBus(String cardNumber, Pageable pageable) {
-		return busRepository.getBus(cardNumber, pageable);
+		return busRepository.getBusByCardNumberContaining(cardNumber, pageable);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class StaffServiceImp implements StaffService {
 	public boolean updateStatusSeat(int seatId, int status) {
 		Seat s = seatRepository.findById(seatId);
 		s.setStatus(status);
-		
+
 		Seat s1 = seatRepository.saveAndFlush(s);
 		return s1 != null ? true : false;
 	}
